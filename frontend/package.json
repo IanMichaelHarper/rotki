@@ -60,5 +60,8 @@
   },
   "lint-staged": {
     "*.{js,ts,vue,json,yml,md}": "eslint"
+  },
+  "dependencies": {
+    "vuetify@2.6.15_vue@2.7.14": "link:/vuetify@2.6.15_vue@2.7.14"
   }
 }

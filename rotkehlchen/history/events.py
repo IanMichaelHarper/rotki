@@ -171,7 +171,7 @@ class EventsHistorian:
             trades, filter_total_found = self.db.get_trades_and_limit_info(
                 cursor=cursor,
                 filter_query=filter_query,
-                has_premium=has_premium,
+                has_premium=True,
             )
         return trades, filter_total_found
 

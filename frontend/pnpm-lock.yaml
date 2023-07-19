@@ -12,6 +12,10 @@ patchedDependencies:
 importers:
 
   .:
+    dependencies:
+      vuetify@2.6.15_vue@2.7.14:
+        specifier: link:/vuetify@2.6.15_vue@2.7.14
+        version: link:../../../../../../vuetify@2.6.15_vue@2.7.14
     devDependencies:
       '@rotki/eslint-config':
         specifier: 1.1.0

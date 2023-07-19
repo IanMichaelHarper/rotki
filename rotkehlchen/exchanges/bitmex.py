@@ -74,7 +74,7 @@ def trade_from_bitmex(bitmex_trade: dict) -> MarginPosition:
     currency = bitmex_to_world(bitmex_trade['currency'])
     fee = deserialize_fee(bitmex_trade['fee'])
     notes = bitmex_trade['address']
-    assert currency == A_BTC, 'Bitmex trade should only deal in BTC'
+    assert currency == A_BTC, 'Bitmex trade should only deal in BTC'  # not true anymore I don't think
 
     log.debug(
         'Processing Bitmex Trade',

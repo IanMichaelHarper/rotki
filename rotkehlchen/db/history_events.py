@@ -394,6 +394,7 @@ class DBHistoryEvents:
         base_prefix = 'SELECT '
         type_idx = 0
         special_free_query = False
+        has_premium = True
         if group_by_event_ids is True:
             if has_premium:
                 base_prefix += 'COUNT(*), '

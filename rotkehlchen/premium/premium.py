@@ -166,21 +166,21 @@ class Premium:
             raise PremiumAuthenticationError('rotki API key was rejected by server')
 
     def is_active(self, catch_connection_errors: bool = True) -> bool:
-        if self.status == SubscriptionStatus.ACTIVE:
-            return True
-
-        try:
-            self.query_last_data_metadata()
-        except RemoteError:
-            self.status = SubscriptionStatus.INACTIVE
-            if catch_connection_errors is False:
-                raise
-            return False
-        except PremiumAuthenticationError:
-            self.status = SubscriptionStatus.INACTIVE
-            return False
-        else:
-            self.status = SubscriptionStatus.ACTIVE
+        # if self.status == SubscriptionStatus.ACTIVE:
+        #     return True
+        #
+        # try:
+        #     self.query_last_data_metadata()
+        # except RemoteError:
+        #     self.status = SubscriptionStatus.INACTIVE
+        #     if catch_connection_errors is False:
+        #         raise
+        #     return False
+        # except PremiumAuthenticationError:
+        #     self.status = SubscriptionStatus.INACTIVE
+        #     return False
+        # else:
+        #     self.status = SubscriptionStatus.ACTIVE
             return True
 
     def sign(self, method: str, **kwargs: Any) -> tuple[hmac.HMAC, dict]:

@@ -1899,12 +1899,14 @@ class DBHandler:
 
         The returned list is ordered according to the passed filter query"""
         query, bindings = filter_query.prepare()
-        if has_premium:
+        if True:
             query = 'SELECT * from trades ' + query
             results = cursor.execute(query, bindings)
+            print('HERE')
         else:
             query = 'SELECT * FROM (SELECT * from trades ORDER BY timestamp DESC LIMIT ?) ' + query  # noqa: E501
             results = cursor.execute(query, [FREE_TRADES_LIMIT] + bindings)
+            print('HERE')
 
         trades = []
         for result in results:
