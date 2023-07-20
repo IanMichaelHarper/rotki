@@ -117,6 +117,10 @@ def kraken_ledger_entry_type_to_ours(value: str) -> HistoryEventType:
         return HistoryEventType.TRANSFER
     if value == 'adjustment':
         return HistoryEventType.ADJUSTMENT
+    if value == 'margin':
+        return HistoryEventType.MARGIN
+    if value == 'rollover':
+        return HistoryEventType.ROLLOVER
 
     return HistoryEventType.INFORMATIONAL  # returned for kraken's unknown events
 
@@ -169,7 +173,7 @@ def history_event_from_kraken(
                 elif raw_event['subtype'] == 'spotfromstaking':
                     event_type = HistoryEventType.STAKING
                     event_subtype = HistoryEventSubType.RETURN_WRAPPED
-            elif event_type in (HistoryEventType.ADJUSTMENT, HistoryEventType.TRADE):
+            elif event_type in (HistoryEventType.ADJUSTMENT, HistoryEventType.TRADE, HistoryEventType.MARGIN):
                 if raw_amount < ZERO:
                     event_subtype = HistoryEventSubType.SPEND
                     raw_amount = -raw_amount
@@ -1141,6 +1145,8 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
             # Group related events
             raw_events_groupped = defaultdict(list)
             for raw_event in response:
+                if raw_event['type'] in ('rollover', 'margin'):
+                    print('stop')
                 raw_events_groupped[raw_event['refid']].append(raw_event)
 
             new_events = []
@@ -1220,6 +1226,9 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
     def get_event_mappings() -> EventMappingType:
         return {
             HistoryEventType.TRADE: {
+                HistoryEventSubType.FEE: EventCategory.FEE,
+            },
+            HistoryEventType.MARGIN: {
                 HistoryEventSubType.FEE: EventCategory.FEE,
             },
             HistoryEventType.SPEND: {

@@ -230,6 +230,7 @@ export default class SubprocessHandler {
       fs.mkdirSync(options.logDirectory);
     }
     this.logDirectory = options.logDirectory;
+    // process.env.SKIP_PYTHON_BACKEND = '1';
     if (process.env.SKIP_PYTHON_BACKEND) {
       this.logToFile('Skipped starting rotki-core');
       return;
@@ -284,11 +285,11 @@ export default class SubprocessHandler {
     this._port = port;
     const args: string[] = getBackendArguments(options);
 
-    if (this.guessPackaged()) {
-      this.startProcessPackaged(port, args, window);
-    } else {
-      this.startProcess(port, args);
-    }
+    // if (this.guessPackaged()) {
+      // this.startProcessPackaged(port, args, window);
+    // } else {
+      // this.startProcess(port, args);
+    // }
 
     const childProcess = this.childProcess;
     if (!childProcess) {

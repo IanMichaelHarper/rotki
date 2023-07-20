@@ -67,6 +67,9 @@ class HistoryEventType(SerializableEnumNameMixin):
     INFORMATIONAL = auto()
     MIGRATE = auto()
     RENEW = auto()
+    MARGIN = auto()
+    ROLLOVER = auto()
+    SETTLED = auto()
 
 
 class HistoryEventSubType(SerializableEnumNameMixin):
