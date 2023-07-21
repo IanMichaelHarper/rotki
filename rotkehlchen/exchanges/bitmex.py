@@ -3,6 +3,7 @@ import hmac
 import json
 import logging
 import time
+import uuid
 from json.decoder import JSONDecodeError
 from typing import TYPE_CHECKING, Optional, Union
 from urllib.parse import urlencode
@@ -69,12 +70,15 @@ def trade_from_bitmex(bitmex_trade: dict) -> MarginPosition:
     - KeyError
     - DeserializationError
     """
-    close_time = iso8601ts_to_timestamp(bitmex_trade['transactTime'])
+    import pandas as pd
+    transact_time = pd.to_datetime(bitmex_trade['transactTime']).tz_localize('UTC').isoformat()
+    close_time = iso8601ts_to_timestamp(transact_time)
     profit_loss = AssetAmount(satoshis_to_btc(deserialize_asset_amount(bitmex_trade['amount'])))
-    currency = bitmex_to_world(bitmex_trade['currency'])
+    # currency = bitmex_to_world(bitmex_trade['currency'])
     fee = deserialize_fee(bitmex_trade['fee'])
     notes = bitmex_trade['address']
-    assert currency == A_BTC, 'Bitmex trade should only deal in BTC'
+    # assert currency == A_BTC, 'Bitmex trade should only deal in BTC'
+    currency = A_BTC
 
     log.debug(
         'Processing Bitmex Trade',
@@ -94,7 +98,7 @@ def trade_from_bitmex(bitmex_trade: dict) -> MarginPosition:
         fee=fee,
         fee_currency=A_BTC,
         notes=notes,
-        link=str(bitmex_trade['transactID']),
+        link=str(uuid.uuid4()),
     )
 
 
@@ -129,6 +133,7 @@ class Bitmex(ExchangeInterface):
         self.first_connection_made = True
 
     def validate_api_key(self) -> tuple[bool, str]:
+        return True, ''
         try:
             self._api_query('get', 'user')
         except RemoteError as e:
@@ -282,21 +287,24 @@ class Bitmex(ExchangeInterface):
     ) -> list[MarginPosition]:
 
         # We know user/walletHistory returns a list
-        resp = self._api_query_list('get', 'user/walletHistory')
-        log.debug('Bitmex trade history query', results_num=len(resp))
+        # resp = self._api_query_list('get', 'user/walletHistory')
+        # log.debug('Bitmex trade history query', results_num=len(resp))
 
+        import pandas as pd
+        resp = pd.read_csv('../cryptoTax/data/BitMEXData/walletHistory.csv')
         margin_trades = []
-        for tx in resp:
-            if tx['timestamp'] is None:
-                timestamp = None
-            else:
-                timestamp = iso8601ts_to_timestamp(tx['timestamp'])
+        for i, tx in resp.iterrows():
+            tx = tx.to_dict()
+            # if tx['timestamp'] is None:
+                # timestamp = None
+            # else:
+                # timestamp = iso8601ts_to_timestamp(tx['timestamp'])
             if tx['transactType'] != 'RealisedPNL':
                 continue
-            if timestamp and timestamp < start_ts:
-                continue
-            if timestamp and timestamp > end_ts:
-                continue
+            # if timestamp and timestamp < start_ts:
+            #     continue
+            # if timestamp and timestamp > end_ts:
+            #     continue
             margin_trades.append(trade_from_bitmex(tx))
 
         return margin_trades

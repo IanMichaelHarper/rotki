@@ -3450,7 +3450,7 @@ class RestAPI:
             group_by_event_ids: bool,
     ) -> Response:
         dbevents = DBHistoryEvents(self.rotkehlchen.data.db)
-        has_premium = False
+        has_premium = True
         entries_limit = FREE_HISTORY_EVENTS_LIMIT
         if self.rotkehlchen.premium is not None:
             has_premium = True

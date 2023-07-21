@@ -58,7 +58,8 @@ class BaseExchangeImporter(metaclass=ABCMeta):
         self.maybe_flush_all(cursor)
 
     def maybe_flush_all(self, cursor: DBCursor) -> None:
-        if len(self._trades) + len(self._asset_movements) + len(self._ledger_actions) + len(self._history_events) >= ITEMS_PER_DB_WRITE:  # noqa: E501
+        if len(self._trades) + len(self._asset_movements) + len(self._ledger_actions) \
+                + len(self._history_events) >= ITEMS_PER_DB_WRITE:
             self._flush_all(cursor)
 
     def _flush_all(self, cursor: DBCursor) -> None:

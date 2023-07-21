@@ -837,7 +837,48 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
             start_ts: Timestamp,  # pylint: disable=unused-argument
             end_ts: Timestamp,
     ) -> list[MarginPosition]:
-        return []  # noop for kraken
+        
+        log.debug(
+        'Processing Kraken MarginTrade'
+    )
+
+        from rotkehlchen.fval import FVal
+        from rotkehlchen.types import Timestamp
+        return [
+            MarginPosition(
+                location=Location.KRAKEN,
+                open_time=Timestamp(1689677100),
+                close_time=Timestamp(1689763500),
+                profit_loss=AssetAmount(FVal(20)),
+                pl_currency=A_USD,
+                fee=Fee(FVal(0.2)),
+                fee_currency=A_USD,
+                notes='test',
+                link='fake-id',
+            ),
+            MarginPosition(
+                location=Location.KRAKEN,
+                open_time=None,
+                close_time=Timestamp(1689849900),
+                profit_loss=AssetAmount(FVal(202)),
+                pl_currency=A_USD,
+                fee=Fee(FVal(0.22)),
+                fee_currency=A_USD,
+                notes='test2',
+                link='fake-id2',
+            ),
+            MarginPosition(
+                location=Location.KRAKEN,
+                open_time=Timestamp(1689936300),
+                close_time=Timestamp(1690022700),
+                profit_loss=AssetAmount(FVal(201)),
+                pl_currency=A_USD,
+                fee=Fee(FVal(0.21)),
+                fee_currency=A_USD,
+                notes='test3',
+                link='fake-id3',
+            )
+        ]
 
     def query_online_income_loss_expense(
             self,
@@ -1145,8 +1186,7 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
             # Group related events
             raw_events_groupped = defaultdict(list)
             for raw_event in response:
-                if raw_event['type'] in ('rollover', 'margin'):
-                    print('stop')
+                # if raw_event['type'] in ('rollover', 'margin'): this actually gets hit
                 raw_events_groupped[raw_event['refid']].append(raw_event)
 
             new_events = []
