@@ -121,6 +121,8 @@ def kraken_ledger_entry_type_to_ours(value: str) -> HistoryEventType:
         return HistoryEventType.MARGIN
     if value == 'rollover':
         return HistoryEventType.ROLLOVER
+    if value == 'settled':
+        return HistoryEventType.SETTLED
 
     return HistoryEventType.INFORMATIONAL  # returned for kraken's unknown events
 
