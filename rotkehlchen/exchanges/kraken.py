@@ -924,6 +924,15 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
                     kfee_part = trade_part
                 else:
                     receive_part = trade_part
+            elif trade_part.event_type == HistoryEventType.MARGIN:
+                if trade_part.event_subtype == HistoryEventSubType.FEE:
+                    fee_part = trade_part
+                elif trade_part.event_subtype == HistoryEventSubType.SPEND:
+                    spend_part = trade_part
+                elif trade_part.asset == A_KFEE:
+                    kfee_part = trade_part
+                else:
+                    receive_part = trade_part
 
             if (
                 trade_part.balance.amount != ZERO and
@@ -1019,8 +1028,6 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
             rate = Price(receive_part.balance.amount / amount)
 
         # If kfee was found we use it as the fee for the trade
-        fee: Optional[Fee] = None
-        fee_asset: Optional[Asset] = None
         if kfee_part is not None and fee_part is None:
             fee = Fee(kfee_part.balance.amount)
             fee_asset = A_KFEE
