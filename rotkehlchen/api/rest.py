@@ -732,7 +732,8 @@ class RestAPI:
                     cursor=cursor,
                     entries_table='trades',
                 ),
-                'entries_limit': FREE_TRADES_LIMIT if self.rotkehlchen.premium is None else -1,
+                # 'entries_limit': FREE_TRADES_LIMIT if self.rotkehlchen.premium is None else -1,
+                'entries_limit': -1,
             }
 
         return {'result': result, 'message': '', 'status_code': HTTPStatus.OK}
@@ -3451,7 +3452,7 @@ class RestAPI:
     ) -> Response:
         dbevents = DBHistoryEvents(self.rotkehlchen.data.db)
         has_premium = True
-        entries_limit = FREE_HISTORY_EVENTS_LIMIT
+        entries_limit = -1
         if self.rotkehlchen.premium is not None:
             has_premium = True
             entries_limit = - 1

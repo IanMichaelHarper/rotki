@@ -166,7 +166,7 @@ class EventsHistorian:
         if only_cache is False:
             self._query_services_for_trades(filter_query=filter_query)
 
-        has_premium = self.chains_aggregator.premium is not None
+        has_premium = True # self.chains_aggregator.premium is not None
         with self.db.conn.read_ctx() as cursor:
             trades, filter_total_found = self.db.get_trades_and_limit_info(
                 cursor=cursor,

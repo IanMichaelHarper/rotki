@@ -127,7 +127,7 @@ class Rotkehlchen:
         """
         # Can also be None after unlock if premium credentials did not
         # authenticate or premium server temporarily offline
-        self.premium: Optional[Premium] = None
+        self.premium: Optional[Premium] = True
         self.user_is_logged_in: bool = False
 
         self.args = args
