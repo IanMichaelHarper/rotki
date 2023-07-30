@@ -44,7 +44,7 @@ def deserialize_fee(fee: Optional[str]) -> Fee:
 
     Can throw DeserializationError if the fee is not as expected
     """
-    if fee is None:
+    if fee is None or fee == 'null':
         return Fee(ZERO)
 
     try:

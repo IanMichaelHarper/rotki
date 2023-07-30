@@ -37,7 +37,7 @@ from rotkehlchen.db.filtering import (
 )
 from rotkehlchen.db.history_events import DBHistoryEvents
 from rotkehlchen.db.ledger_actions import DBLedgerActions
-from rotkehlchen.exchanges.data_structures import AssetMovement, Trade
+from rotkehlchen.exchanges.data_structures import AssetMovement, MarginPosition, Trade
 from rotkehlchen.fval import FVal
 from rotkehlchen.rotkehlchen import Rotkehlchen
 from rotkehlchen.tests.utils.constants import A_AXS, A_CRO, A_GBP, A_MCO, A_XMR
@@ -1210,6 +1210,223 @@ def assert_bisq_trades_import_results(rotki: Rotkehlchen):
         notes='ID: xxhee',
     )]
     assert trades == expected_trades
+
+
+def assert_bitmex_import_wallet_history(rotki: Rotkehlchen):
+    expected_asset_movements = [
+        AssetMovement(
+            location=Location.BITMEX,
+            category=AssetMovementCategory.DEPOSIT,
+            address=None,
+            transaction_id=None,
+            timestamp=Timestamp(1574825791),
+            asset=A_BTC,
+            amount=FVal(0.05000000),
+            fee_asset=A_BTC,
+            fee=Fee(FVal(00000000)),
+            link='Imported from BitMEX CSV file. Transact Type: Deposit',
+        ),
+        AssetMovement(
+            location=Location.BITMEX,
+            category=AssetMovementCategory.WITHDRAWAL,
+            address='3Qsy5NGSnGA1vd1cmcNgeMjLrKPsKNhfCe',
+            transaction_id=None,
+            timestamp=Timestamp(1577252845),
+            asset=A_BTC,
+            amount=FVal(0.05746216),
+            fee_asset=A_BTC,
+            fee=Fee(FVal(0.00100000)),
+            link='Imported from BitMEX CSV file. Transact Type: Withdrawal',
+        ),
+    ]
+    expected_history_events = [
+        HistoryEvent(
+            event_identifier='BMEX_c671fb3c0e2765f981ec67cb5e0be0ede0ace5093addbbd94b35b363a0ea9bd7',
+            sequence_index=0,
+            timestamp=TimestampMS(1576738800000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.RECEIVE,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000373), usd_value=FVal(0.0267040398)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=7,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_126e618653d278a53c0f0b84af8a5002a0ffc67be797d54adc169a5457517926',
+            sequence_index=0,
+            timestamp=TimestampMS(1576825200000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.RECEIVE,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000016), usd_value=FVal(0.0011525456)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=6,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_43cfd1475399588d65719dbdcd4bf62f14582d9d2c991f0f949e674f73950036',
+            sequence_index=0,
+            timestamp=TimestampMS(1576911600000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.SPEND,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000123), usd_value=FVal(0.0088061481)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=5,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_3f6cd11f6397881a7ac6ce7bff35d75351d219314e0e90e62c3ae641b207545a',
+            sequence_index=0,
+            timestamp=TimestampMS(1576998000000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.SPEND,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000075), usd_value=FVal(0.0056381850)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=4,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_34682e335888b0539850de588be1c5a5b0f778ce4720e875f7662c94f0ae03da',
+            sequence_index=0,
+            timestamp=TimestampMS(1577084400000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.SPEND,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000203), usd_value=FVal(0.014872998)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=3,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_a9896c80774dad4b0b490a44ea6d09bcad6ffddfcc5a823f9904840705eebd9e',
+            sequence_index=0,
+            timestamp=TimestampMS(1577170800000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.SPEND,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00000201), usd_value=FVal(0.0145944291)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=2,
+        ),
+        HistoryEvent(
+            event_identifier='BMEX_9b36ec0efde207618b1d88552b2886c33b269145652ec655a1ba08c8eaf77f1a',
+            sequence_index=0,
+            timestamp=TimestampMS(1577257200000),
+            location=Location.BITMEX,
+            event_type=HistoryEventType.MARGIN,
+            event_subtype=HistoryEventSubType.RECEIVE,
+            asset=A_BTC,
+            balance=Balance(FVal(0.00085517), usd_value=FVal(6.1595500624)),
+            location_label=None,
+            notes='PnL from trade on XBTUSD',
+            identifier=1,
+        ),
+    ]
+    expected_margin_positions = [
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1576738800),
+            profit_loss=AssetAmount(FVal(0.00000373)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1576825200),
+            profit_loss=AssetAmount(FVal(0.00000016)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1576911600),
+            profit_loss=AssetAmount(FVal(-0.00000123)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1576998000),
+            profit_loss=AssetAmount(FVal(-0.00000075)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1577084400),
+            profit_loss=AssetAmount(FVal(-0.00000203)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1577170800),
+            profit_loss=AssetAmount(FVal(-0.00000201)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+        MarginPosition(
+            location=Location.BITMEX,
+            open_time=None,
+            close_time=Timestamp(1577257200),
+            profit_loss=AssetAmount(FVal(0.00085517)),
+            pl_currency=A_BTC,
+            fee=Fee(FVal(0)),
+            fee_currency=A_BTC,
+            link='Imported from BitMEX CSV file. Transact Type: RealisedPNL',
+            notes='PnL from trade on XBTUSD',
+        ),
+    ]
+    with rotki.data.db.conn.read_ctx() as cursor:
+        margin_positions = rotki.data.db.get_margin_positions(cursor)
+        history_db = DBHistoryEvents(rotki.data.db)
+        history_events = history_db.get_history_events(cursor, filter_query=HistoryEventFilterQuery.make(), has_premium=True)  # noqa: E501
+        warnings = rotki.msg_aggregator.consume_warnings()
+        errors = rotki.msg_aggregator.consume_errors()
+        asset_movements = rotki.data.db.get_asset_movements(
+            cursor,
+            filter_query=AssetMovementsFilterQuery.make(),
+            has_premium=True,
+        )
+    assert asset_movements == expected_asset_movements
+    assert margin_positions == expected_margin_positions
+    assert expected_history_events == history_events
+    assert len(warnings) == 0
+    assert len(errors) == 0
 
 
 def assert_binance_import_results(rotki: Rotkehlchen):

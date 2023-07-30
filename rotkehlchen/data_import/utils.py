@@ -1,3 +1,4 @@
+import hashlib
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 from typing import Any
@@ -9,9 +10,15 @@ from rotkehlchen.db.drivers.gevent import DBCursor
 from rotkehlchen.db.history_events import DBHistoryEvents
 from rotkehlchen.db.ledger_actions import DBLedgerActions
 from rotkehlchen.errors.misc import InputError
-from rotkehlchen.exchanges.data_structures import AssetMovement, Trade
+from rotkehlchen.exchanges.data_structures import AssetMovement, MarginPosition, Trade
 
 ITEMS_PER_DB_WRITE = 400
+
+
+def hash_csv_row(csv_row: dict[str, Any]) -> str:
+    """Convert the row to string and encode it to a hex string to get a unique hash"""
+    row_str = str(csv_row).encode()
+    return hashlib.sha256(row_str).hexdigest()
 
 
 class BaseExchangeImporter(metaclass=ABCMeta):
@@ -20,6 +27,7 @@ class BaseExchangeImporter(metaclass=ABCMeta):
         self.db_ledger = DBLedgerActions(self.db, self.db.msg_aggregator)
         self.history_db = DBHistoryEvents(self.db)
         self._trades: list[Trade] = []
+        self._margin_trades: list[MarginPosition] = []
         self._asset_movements: list[AssetMovement] = []
         self._ledger_actions: list[LedgerAction] = []
         self._history_events: list[HistoryBaseEntry] = []
@@ -45,6 +53,10 @@ class BaseExchangeImporter(metaclass=ABCMeta):
         self._trades.append(trade)
         self.maybe_flush_all(cursor)
 
+    def add_margin_trade(self, cursor: DBCursor, margin_trade: MarginPosition) -> None:
+        self._margin_trades.append(margin_trade)
+        self.maybe_flush_all(cursor)
+
     def add_asset_movement(self, cursor: DBCursor, asset_movement: AssetMovement) -> None:
         self._asset_movements.append(asset_movement)
         self.maybe_flush_all(cursor)
@@ -58,15 +70,17 @@ class BaseExchangeImporter(metaclass=ABCMeta):
         self.maybe_flush_all(cursor)
 
     def maybe_flush_all(self, cursor: DBCursor) -> None:
-        if len(self._trades) + len(self._asset_movements) + len(self._ledger_actions) + len(self._history_events) >= ITEMS_PER_DB_WRITE:  # noqa: E501
+        if len(self._trades) + len(self._margin_trades) + len(self._asset_movements) + len(self._ledger_actions) + len(self._history_events) >= ITEMS_PER_DB_WRITE:  # noqa: E501
             self._flush_all(cursor)
 
     def _flush_all(self, cursor: DBCursor) -> None:
         self.db.add_trades(cursor, trades=self._trades)
+        self.db.add_margin_positions(cursor, margin_positions=self._margin_trades)
         self.db.add_asset_movements(cursor, asset_movements=self._asset_movements)
         self.db_ledger.add_ledger_actions(cursor, actions=self._ledger_actions)
         self.history_db.add_history_events(cursor, history=self._history_events)
         self._trades = []
+        self._margin_trades = []
         self._asset_movements = []
         self._ledger_actions = []
         self._history_events = []
