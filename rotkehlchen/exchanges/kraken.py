@@ -1196,6 +1196,8 @@ class Kraken(ExchangeInterface, ExchangeWithExtras):
             raw_events_groupped = defaultdict(list)
             for raw_event in response:
                 # if raw_event['type'] in ('rollover', 'margin'): this actually gets hit
+                if raw_event['type'] in ('margin', 'rollover', 'settlement'):
+                    continue  # omit until margin trading is sorted
                 raw_events_groupped[raw_event['refid']].append(raw_event)
 
             new_events = []
