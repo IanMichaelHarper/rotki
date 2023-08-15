@@ -50,6 +50,14 @@ const sources = [
     )
   },
   {
+    identifier: 'poloniex',
+    name: t('import_data.poloniex.name'),
+    logo: './assets/images/protocols/poloniex.svg',
+    form: defineAsyncComponent(
+      () => import('@/components/import/PoloniexImport.vue')
+    )
+  },
+  {
     identifier: 'bitmex',
     name: t('import_data.bitmex.name'),
     logo: './assets/images/protocols/bitmex.svg',

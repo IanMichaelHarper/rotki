@@ -748,6 +748,7 @@ EXTERNAL_EXCHANGES = (
     Location.UPHOLD,
     Location.BISQ,
     Location.BITMEX,
+    Location.POLONIEX,
 )
 
 

@@ -2576,6 +2576,12 @@
       "line_two": "Amounts in the wallet history file are assumed to be Bitcoin. If you would like this feature supported for other currencies, please reach out.",
       "name": "BitMEX"
     },
+    "poloniex": {
+      "import": "Import {0} from Poloniex",
+      "import_trade": "trades",
+      "line_one": "[Experimental] If you find an issue with the imported data, let us know so we can adapt the code accordingly.",
+      "name": "Poloniex"
+    },
     "bisq": {
       "import": "Import {0} from Bisq",
       "import_trade": "trades",

@@ -3,6 +3,7 @@ Rotki Usage Guide
 .. toctree::
   :maxdepth: 2
 
+todo
 
 Introduction
 *************

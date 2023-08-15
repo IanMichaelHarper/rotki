@@ -2,6 +2,7 @@
 Changelog
 =========
 
+* :feature:`` Users will now be able to import their Poloniex trade history files.
 * :feature:`6444` Users will now be able to see the asset graph in asset collection view.
 * :feature:`6274` Staking events from cointracking CSV can now be imported properly
 * :feature:`6041` Add external service timeout settings.
