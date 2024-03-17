@@ -63,6 +63,14 @@ def _query_mempool_space(accounts: Sequence[BTCAddress]) -> dict[BTCAddress, FVa
     )
 
 
+# should use get_rpc_nodes and do a DB migration with the existing defaults
+def _query_local_mempool(accounts: Sequence[BTCAddress]) -> dict[BTCAddress, FVal]:
+    return _query_blockstream_or_mempool(
+        accounts=accounts,
+        base_url='https://192.168.1.203:4080/api/address/',
+    )
+
+
 def _query_blockchain_info(accounts: Sequence[BTCAddress]) -> dict[BTCAddress, FVal]:
     """Queries balances from blockchain.info
     May raise:
@@ -100,17 +108,20 @@ def get_bitcoin_addresses_balances(
     May raise:
     - RemoteError couldn't query any of the bitcoin balance APIs
     """
-    if _have_bc1_accounts(accounts) is True:
-        api_callbacks = {
-            'blockstream.info': _query_blockstream_info,
-            'mempool.space': _query_mempool_space,
-        }
-    else:
-        api_callbacks = {
-            'blockchain.info': _query_blockchain_info,
-            'blockstream.info': _query_blockstream_info,
-            'mempool.space': _query_mempool_space,
-        }
+    # if _have_bc1_accounts(accounts) is True:
+    #     api_callbacks = {
+    #         'mempool.space': _query_mempool_space,
+    #         'blockstream.info': _query_blockstream_info,
+    #     }
+    # else:
+    #     api_callbacks = {
+    #         'mempool.space': _query_mempool_space,
+    #         'blockchain.info': _query_blockchain_info,
+    #         'blockstream.info': _query_blockstream_info,
+    #     }
+    api_callbacks = {
+        'localmempool': _query_local_mempool
+    }
     errors: dict[str, str] = {}
     for api_name, callback in api_callbacks.items():
         try:

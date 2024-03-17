@@ -30,7 +30,7 @@ ROTKEHLCHEN_TRANSIENT_DB_VERSION = 1
 DEFAULT_TAXFREE_AFTER_PERIOD = YEAR_IN_SECONDS
 DEFAULT_INCLUDE_CRYPTO2CRYPTO = True
 DEFAULT_INCLUDE_GAS_COSTS = True
-DEFAULT_PREMIUM_SHOULD_SYNC = False
+DEFAULT_PREMIUM_SHOULD_SYNC = True
 DEFAULT_UI_FLOATING_PRECISION = 2
 DEFAULT_BALANCE_SAVE_FREQUENCY = 24
 DEFAULT_MAIN_CURRENCY = A_USD
@@ -161,7 +161,7 @@ DBSettingsFieldTypes = (
 
 @dataclass(init=True, repr=True, eq=True, order=False, unsafe_hash=False, frozen=False)
 class DBSettings:
-    have_premium: bool = False
+    have_premium: bool = True
     version: int = ROTKEHLCHEN_DB_VERSION
     last_write_ts: Timestamp = field(default=Timestamp(0))
     premium_should_sync: bool = DEFAULT_PREMIUM_SHOULD_SYNC
