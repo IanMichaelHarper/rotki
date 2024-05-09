@@ -50,6 +50,12 @@ const rpcSettingTabs = computed<RpcSettingTab[]>(() => [
     ),
   },
   {
+    chain: Blockchain.BTC,
+    component: defineAsyncComponent(
+      () => import('@/components/settings/general/rpc/BtcRpcSetting.vue'),
+    ),
+  },
+  {
     id: 'eth_consensus_layer',
     name: 'ETH Beacon Node',
     image: './assets/images/protocols/ethereum.svg',
