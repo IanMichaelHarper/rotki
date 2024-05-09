@@ -535,3 +535,22 @@ def test_bitcoin_balance_api_resolver(network_mocking):
             # Third source fails - FATALITY!!!
             with patch('rotkehlchen.chain.bitcoin._query_mempool_space', MagicMock(side_effect=RemoteError('Fatality'))), pytest.raises(RemoteError):  # noqa: E501
                 get_bitcoin_addresses_balances(addresses)
+
+
+def test_local_bitcoin_node(network_mocking):
+    addresses = [
+        BTCAddress('3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5'),
+        BTCAddress('34SjMcbLquZ7HmFmQiAHqEHY4mBEbvGeVL'),
+        BTCAddress('3J7sT2fbDaF3XrjpWM5GsUyaDr7i7psi88'),
+        BTCAddress('36Z62MQfJHF11DWqMMzc3rqLiDFGiVF8CB'),
+        BTCAddress('33k4CdyQJFwXQD9giSKyo36mTvE9Y6C9cP'),
+    ]
+
+    def check_balances(balances_to_check: dict[BTCAddress, FVal]) -> None:
+        for addr in addresses:
+            assert addr in balances_to_check
+
+    # Test balances are returned properly if first source works
+    balances = get_bitcoin_addresses_balances(addresses)
+    check_balances(balances)
+

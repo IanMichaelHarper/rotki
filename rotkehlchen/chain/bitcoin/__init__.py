@@ -67,7 +67,7 @@ def _query_mempool_space(accounts: Sequence[BTCAddress]) -> dict[BTCAddress, FVa
 def _query_local_mempool(accounts: Sequence[BTCAddress]) -> dict[BTCAddress, FVal]:
     return _query_blockstream_or_mempool(
         accounts=accounts,
-        base_url='https://192.168.1.203:4080/api/address/',
+        base_url='http://192.168.1.203:4080/api/address/',
     )
 
 
