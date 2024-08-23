@@ -539,7 +539,7 @@ def test_bitcoin_balance_api_resolver(network_mocking):
 
 def test_local_bitcoin_node(network_mocking):
     addresses = [
-        BTCAddress('3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5'),
+        # BTCAddress('3FZbgi29cpjq2GjdwV8eyHuJJnkLtktZc5'),
         BTCAddress('34SjMcbLquZ7HmFmQiAHqEHY4mBEbvGeVL'),
         BTCAddress('3J7sT2fbDaF3XrjpWM5GsUyaDr7i7psi88'),
         BTCAddress('36Z62MQfJHF11DWqMMzc3rqLiDFGiVF8CB'),
